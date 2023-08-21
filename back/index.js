@@ -14,17 +14,14 @@ app.use(cors());
 // Middleware pour vérifier l'authentification
 function authenticateToken(req, res, next) {
   const token = req.header('Authorization');
-  console.log(token, "le token !!!!!!!!!!");
 
   if (!token) {
       return res.status(401).json({ message: 'Token manquant' });
     }
-    
     jwt.verify(token, secretKey, (err, user) => {
         if (err) {
             return res.status(403).json({ message: 'Token invalide' });
     }
-
     req.user = user;
     next();
 });
@@ -33,16 +30,15 @@ function authenticateToken(req, res, next) {
 app.post('/login', (req, res) => {
 
   const user = {
-    id: 123,
-    username: 'utilisateur',
+    id: 123, 
+    username: 'toto',
+    password: "titi"
   };
 
   const token = jwt.sign(user, secretKey, { expiresIn: '1h' });
-
   res.json({ token });
 });
 
-// Exemple d'une route protégée
 app.get('/protected', authenticateToken, (req, res) => {
   // Cette route est protégée par le middleware authenticateToken
   // accéder aux données de l'utilisateur à partir de req.user
